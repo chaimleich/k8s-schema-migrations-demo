@@ -1,0 +1,12 @@
+apiVersion: v2
+name: sample-app
+type: application
+version: 0.1.1
+appVersion: 0.1.1
+
+# This is where the magic happens!
+# Declare the schema migration helm chart
+# as a dependency for this helm chart
+dependencies:
+  - name: migration-repo
+    version: 1.0.0
