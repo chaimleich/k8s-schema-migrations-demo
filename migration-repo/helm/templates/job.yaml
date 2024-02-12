@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "0"
+spec:
+  template:
+    spec:
+      containers:
+        - name: pre-deploy-job
+          image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+               name: {{ .Release.Name }}-sec
+          env:
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value | squote }}
+            {{- end }}
+      restartPolicy: Never
+  backoffLimit: 1
